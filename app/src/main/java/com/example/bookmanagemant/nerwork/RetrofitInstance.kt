@@ -16,7 +16,7 @@ object RetrofitInstance {
 
         Retrofit.Builder()
             .baseUrl(BASE_URL)
-            .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
+            .addConverterFactory(json.asConverterFactory("application/json".toMediaType())) // toMediaType is contained in okhttp3. So you need to add okhttp3 dependency in build.gradle.
             .build()
     }
 
