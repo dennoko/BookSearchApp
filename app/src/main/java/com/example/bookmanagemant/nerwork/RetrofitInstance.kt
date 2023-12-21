@@ -11,6 +11,7 @@ object RetrofitInstance {
     private val retrofit: Retrofit by lazy {
         val json = Json {
             ignoreUnknownKeys = true
+            coerceInputValues = true
         }
 
         Retrofit.Builder()

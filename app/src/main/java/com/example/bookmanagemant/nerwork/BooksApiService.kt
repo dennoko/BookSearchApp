@@ -7,5 +7,5 @@ interface BooksApiService {
     @GET("books/v1/volumes")
     suspend fun searchBooks(
         @Query("q") query: String,
-    ) : BooksInfoDataModel
+    ): BooksInfoDataModel
 }

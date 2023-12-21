@@ -2,6 +2,7 @@ package com.example.bookmanagemant.nerwork
 
 import kotlinx.serialization.Serializable
 
+
 @Serializable
 data class BooksInfoDataModel(
     val kind: String,
@@ -19,7 +20,7 @@ data class BookItem(
 @Serializable
 data class VolumeInfo(
     val title: String,
-    val subtitle: String,
+    val subtitle: String?,
     val authors: List<String>,
     val publisher: String,
     val description: String,
