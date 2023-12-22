@@ -77,4 +77,6 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
     // OkHttp
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    // Coil
+    implementation("io.coil-kt:coil-compose:2.5.0")
 }

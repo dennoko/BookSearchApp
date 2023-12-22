@@ -2,6 +2,7 @@ package com.example.bookmanagemant.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,67 +27,79 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
+import coil.compose.AsyncImage
 import com.example.bookmanagemant.ViewModels.ApiVM
 import com.example.bookmanagemant.ViewModels.AppVM
+import com.example.bookmanagemant.ui_components.BookDialog
 import com.example.bookmanagemant.ui_components.BookTitleCard
 import com.example.bookmanagemant.ui_components.TitleTxt
 
 @Composable
 fun MainScreen(vm: ApiVM, appvm: AppVM) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
-            .verticalScroll(rememberScrollState())
-        ) {
-        TitleTxt()
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Text(
-            text = "Add a keyword to search for books.",
-            fontSize = 15.sp,
-            fontWeight = FontWeight.Normal,
-            textAlign = TextAlign.Center,
-            color = MaterialTheme.colorScheme.onSurface,
-            modifier = Modifier
-                .fillMaxWidth()
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-
-        BasicTextField(
-            value = appvm.searchKeyword.value,
-            onValueChange = {
-                appvm.searchKeyword.value = it
-            },
-            Modifier
-                .background(color = Color.White, shape = RoundedCornerShape(8.dp))
-                .border(2.dp, MaterialTheme.colorScheme.primary, RoundedCornerShape(8.dp))
-                .padding(8.dp),
-            singleLine = true, // ここに書かないとitでエラーが出る. なぜ?
-            )
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Button(
-            onClick = { vm.searchBooks(appvm.searchKeyword.value) },
-            modifier = Modifier
-                .background(color = MaterialTheme.colorScheme.primary ,shape = RoundedCornerShape(8.dp))
-        ) {
-            Text(
-                text = "Search",
-                color = MaterialTheme.colorScheme.onPrimary,
-                fontSize = 20.sp,
-                fontWeight = FontWeight.SemiBold,
-                )
+    Box {
+        if (appvm.isDisplayDetail.value) {
+            BookDialog(bookItem = appvm.bookItem!!, isDisplayDetail = appvm.isDisplayDetail.value) {
+                appvm.isDisplayDetail.value = false
+            }
         }
-        Spacer(modifier = Modifier.height(16.dp))
 
-        val booksInfo by vm.booksInfo.collectAsState()
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .verticalScroll(rememberScrollState())
+        ) {
+            TitleTxt()
+            Spacer(modifier = Modifier.height(16.dp))
 
-        booksInfo?.let {
-            Text(text = it.items[0].volumeInfo.title)
+            Text(
+                text = "Add a keyword to search for books.",
+                fontSize = 15.sp,
+                fontWeight = FontWeight.Normal,
+                textAlign = TextAlign.Center,
+                color = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier
+                    .fillMaxWidth()
+            )
+            Spacer(modifier = Modifier.height(8.dp))
 
-            Column {
-                it.items.forEach { item ->
-                    BookTitleCard(bookItem = item)
+            BasicTextField(
+                value = appvm.searchKeyword.value,
+                onValueChange = {
+                    appvm.searchKeyword.value = it
+                },
+                Modifier
+                    .background(color = Color.White, shape = RoundedCornerShape(8.dp))
+                    .border(2.dp, MaterialTheme.colorScheme.primary, RoundedCornerShape(8.dp))
+                    .padding(8.dp),
+                singleLine = true, // ここに書かないとitでエラーが出る. なぜ?
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Button(
+                onClick = { vm.searchBooks(appvm.searchKeyword.value) },
+                modifier = Modifier
+                    .background(color = MaterialTheme.colorScheme.primary ,shape = RoundedCornerShape(8.dp))
+            ) {
+                Text(
+                    text = "Search",
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.SemiBold,
+                )
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+
+            val booksInfo by vm.booksInfo.collectAsState()
+
+            booksInfo?.let {
+                Column {
+                    it.items.forEach { item ->
+                        BookTitleCard(bookItem = item) {
+                            appvm.bookItem = item
+                            appvm.isDisplayDetail.value = true
+                        }
+                    }
                 }
             }
         }
