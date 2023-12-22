@@ -46,8 +46,6 @@ fun MainScreen(vm: ApiVM, appvm: AppVM) {
 
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .verticalScroll(rememberScrollState())
         ) {
             TitleTxt()
             Spacer(modifier = Modifier.height(16.dp))
@@ -93,7 +91,12 @@ fun MainScreen(vm: ApiVM, appvm: AppVM) {
             val booksInfo by vm.booksInfo.collectAsState()
 
             booksInfo?.let {
-                Column {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState())
+
+                ) {
                     it.items.forEach { item ->
                         BookTitleCard(bookItem = item) {
                             appvm.bookItem = item
